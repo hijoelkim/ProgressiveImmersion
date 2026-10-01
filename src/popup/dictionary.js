@@ -1,9 +1,25 @@
+import {
+	DIATHESIS_ORIGIN,
+	DIATHESIS_ORIGIN_NAME,
+	DIATHESIS_TARGET,
+	DIATHESIS_TARGET_NAME,
+	MANUAL_ONLY_TARGETS,
+	browser
+} from '../config';
 import { exportToAnki, importFromAnki } from './anki-handler';
-import { browser } from '../config';
+import { looksLikeDiathesisEasy, looksLikeStockAnki } from '../diathesis-easy';
+import { importDiathesisEasy } from './diathesis-handler';
 import translateWord from '../translateWord';
 
 const dictionary = document.getElementById( 'dictionary' );
-const [ originIso, targetIso, originName, targetName ] = window.location.hash.slice( 1 ).split( '~' );
+const [ originIso, targetIso, originName, targetName ] = window.location.hash.slice( 1 ).split( '~' )
+	.map( part => {
+		try {
+			return decodeURIComponent( part );
+		} catch ( error ) {
+			return part;
+		}
+	});
 
 const importFileInput = document.getElementById( 'anki-import-file' );
 
@@ -48,7 +64,7 @@ browser.storage.local.get( 'dictionary' ).then( value => {
 	const sourceWordInput = document.getElementById( 'source-word' );
 	const translatedWordInput = document.getElementById( 'translated-word' );
 
-	if ( prefillWord && autoTranslate ) {
+	if ( prefillWord && autoTranslate && !MANUAL_ONLY_TARGETS.includes( targetIso ) ) {
 		translateWord( prefillWord, originIso, targetIso )
 			.then( translation => {
 				translatedWordInput.value = translation;
@@ -118,11 +134,23 @@ browser.storage.local.get( 'dictionary' ).then( value => {
 		exportToAnki( originIso, targetIso, originName, targetName );
 	});
 
+	let importMode = 'anki';
+
 	document.getElementById( 'importAnkiButton' )?.addEventListener( 'click', ( e ) => {
 		if ( firefoxFilePickerFix( e ) ) {
 			return;
 		}
 
+		importMode = 'anki';
+		importFileInput.click();
+	});
+
+	document.getElementById( 'importDiathesisButton' )?.addEventListener( 'click', ( e ) => {
+		if ( firefoxFilePickerFix( e ) ) {
+			return;
+		}
+
+		importMode = 'diathesis';
 		importFileInput.click();
 	});
 
@@ -160,12 +188,35 @@ browser.storage.local.get( 'dictionary' ).then( value => {
 		const reader = new FileReader();
 		reader.onload = async ( event ) => {
 			const text = event.target.result;
+			let count = 0;
+			let importedDiathesis = false;
 
-			const count = await importFromAnki( text, originIso, targetIso );
+			try {
+				if ( importMode === 'diathesis' ) {
+					if ( looksLikeStockAnki( text ) ) {
+						alert( 'This looks like a stock Anki file (foreign word first). Use Import from Anki, or add a #columns:en;grc header for Diathesis Easy.' );
+						return;
+					}
 
-			if ( count > 0 ) {
+					count = await importDiathesisEasy( text );
+					importedDiathesis = true;
+				} else if ( looksLikeDiathesisEasy( text ) ) {
+					count = await importDiathesisEasy( text );
+					importedDiathesis = true;
+				} else {
+					count = await importFromAnki( text, originIso, targetIso );
+				}
+			} catch ( error ) {
+				alert( error instanceof Error ? error.message : 'Import failed.' );
+				return;
+			}
+
+			if ( count > 0 && importedDiathesis ) {
+				alert( `Imported ${count} Diathesis Easy words into English → Ancient Greek. Automatic new words are off.` );
+				window.location.hash = `${DIATHESIS_ORIGIN}~${DIATHESIS_TARGET}~${DIATHESIS_ORIGIN_NAME}~${DIATHESIS_TARGET_NAME}`;
+				window.location.reload();
+			} else if ( count > 0 ) {
 				alert( `Imported ${count} words.` );
-				// Reload the page to show the new words in the table
 				window.location.reload();
 			} else {
 				alert( 'No valid words found to import.' );
@@ -200,7 +251,9 @@ browser.storage.local.get( 'dictionary' ).then( value => {
 	if ( Object.keys( value.dictionary[originIso][targetIso] ).length === 0 ) {
 		const caption = dictionary.createCaption();
 		caption.classList.add( 'w3-blue', 'w3-card' );
-		caption.textContent = 'Your dictionary is currently empty, try using the extension more.  Or, you can add words manually below.';
+		caption.textContent = originIso === DIATHESIS_ORIGIN && targetIso === DIATHESIS_TARGET ?
+			'No Ancient Greek words yet. Import a Diathesis Easy list (English gloss; Greek form), or add pairs below.' :
+			'Your dictionary is currently empty, try using the extension more.  Or, you can add words manually below.';
 	}
 
 /* TODO

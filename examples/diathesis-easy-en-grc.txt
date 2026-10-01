@@ -1,0 +1,12 @@
+#diathesis:easy
+#separator:;
+#columns:en;grc
+# English gloss ; Greek form. Extra columns (cardId, easyStreak) are ignored.
+word;λόγος
+love;ἀγάπη
+human;ἄνθρωπος
+god;θεός
+life;ζωή
+beginning;ἀρχή
+wisdom;σοφία
+good news;εὐαγγέλιον

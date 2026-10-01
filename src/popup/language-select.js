@@ -1,4 +1,9 @@
-import { LANGUAGES, browser } from '../config';
+import {
+	DIATHESIS_TARGET,
+	LANGUAGES,
+	NEVER_UPDATE_FREQUENCY,
+	browser
+} from '../config';
 
 document.getElementById( 'title' ).innerHTML = ( window.location.hash === '#origin' ) ? 'Source Language' : 'Target Language';
 
@@ -26,8 +31,18 @@ for ( const isoCode in LANGUAGES ) {
 	button.nativeName = LANGUAGES[isoCode];
 
 	button.addEventListener( 'click', ( e ) => {
-		browser.storage.local.set({ [window.location.hash.slice( 1 )]: e.target.isoCode });
-		browser.storage.local.set({ [window.location.hash.slice( 1 ) + 'NativeName']: e.target.nativeName });
+		const which = window.location.hash.slice( 1 );
+		const updates = {
+			[which]: e.target.isoCode,
+			[which + 'NativeName']: e.target.nativeName
+		};
+
+		if ( which === 'target' && e.target.isoCode === DIATHESIS_TARGET ) {
+			updates.updateFrequency = NEVER_UPDATE_FREQUENCY;
+			updates.phraseTranslationEnabled = false;
+		}
+
+		browser.storage.local.set( updates );
 		window.location.href = './index.html';
 	});
 

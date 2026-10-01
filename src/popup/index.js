@@ -1,5 +1,6 @@
 import {
 	DEFAULT_UPDATE_FREQUENCY,
+	DIATHESIS_TARGET,
 	NEVER_UPDATE_FREQUENCY,
 	browser
 } from '../config';
@@ -75,6 +76,12 @@ browser.storage.local.get( 'originNativeName' ).then( ( value ) => {
 
 browser.storage.local.get( 'targetNativeName' ).then( ( value ) => {
 	document.getElementById( 'targetButton' ).innerHTML = value.targetNativeName;
+});
+
+browser.storage.local.get( 'target' ).then( ( value ) => {
+	if ( value.target === DIATHESIS_TARGET ) {
+		document.getElementById( 'diathesisHintRow' ).style.display = '';
+	}
 });
 
 // Exclusion List

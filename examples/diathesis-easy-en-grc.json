@@ -1,0 +1,65 @@
+{
+  "app": "diathesis",
+  "kind": "diathesis-easy-lexicon",
+  "version": 1,
+  "words": [
+    {
+      "cardId": "sample-logos",
+      "sourceId": "lemma:logos",
+      "sourceKind": "lemma",
+      "en": "word",
+      "grc": "λόγος",
+      "easyStreak": 7,
+      "easyUntil": null
+    },
+    {
+      "cardId": "sample-agape",
+      "sourceId": "lemma:agape",
+      "en": "love",
+      "grc": "ἀγάπη",
+      "easyStreak": 7
+    },
+    {
+      "cardId": "sample-anthropos",
+      "sourceId": "lemma:anthropos",
+      "en": "human",
+      "grc": "ἄνθρωπος",
+      "easyStreak": 4
+    },
+    {
+      "cardId": "sample-theos",
+      "sourceId": "lemma:theos",
+      "en": "god",
+      "grc": "θεός",
+      "easyStreak": 7
+    },
+    {
+      "cardId": "sample-zoe",
+      "sourceId": "lemma:zoe",
+      "en": "life",
+      "grc": "ζωή",
+      "easyStreak": 3
+    },
+    {
+      "cardId": "sample-arche",
+      "sourceId": "lemma:arche",
+      "en": "beginning",
+      "grc": "ἀρχή",
+      "easyStreak": 7
+    },
+    {
+      "cardId": "sample-sophia",
+      "sourceId": "lemma:sophia",
+      "en": "wisdom",
+      "grc": "σοφία",
+      "easyStreak": 7
+    },
+    {
+      "cardId": "sample-euangelion",
+      "sourceId": "lemma:euangelion",
+      "en": "good news",
+      "grc": "εὐαγγέλιον",
+      "easyStreak": 7
+    }
+  ]
+}
