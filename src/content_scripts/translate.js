@@ -1,4 +1,4 @@
-import { browser } from '../config';
+import { MANUAL_ONLY_TARGETS, browser } from '../config';
 
 /* class ProgressiveImmersionWord extends HTMLElement {
 	constructor () {
@@ -100,6 +100,10 @@ function translatePhrase ( matchedWords, textNode, intersectionTarget, dictionar
 	const otherTextHalf = textNode.splitText( firstWord.index );
 	otherTextHalf.textContent = otherTextHalf.textContent.slice( originalPhrase.length );
 	intersectionTarget.insertBefore( phraseElement, otherTextHalf );
+
+	if ( MANUAL_ONLY_TARGETS.includes( target ) ) {
+		return;
+	}
 
 	browser.runtime.sendMessage({
 		phrase: originalPhrase,

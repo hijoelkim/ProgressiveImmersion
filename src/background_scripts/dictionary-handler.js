@@ -1,8 +1,12 @@
-import { browser } from '../config';
+import { MANUAL_ONLY_TARGETS, browser } from '../config';
 import translateWord from '../translateWord';
 
 function updateDictionary (){
 	browser.storage.local.get( [ 'wordpack', 'wordpackIndex', 'wordQueue', 'origin', 'target', 'dictionary' ] ).then( async value => {
+		if ( MANUAL_ONLY_TARGETS.includes( value.target ) ) {
+			return;
+		}
+
 		if ( value.origin === undefined || value.target === undefined || value.wordQueue === undefined || value.wordQueue.length === 0 ) {
 			return;
 		}

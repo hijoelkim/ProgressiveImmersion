@@ -10,6 +10,10 @@ A browser extension that progressively immerses you in a language.
 - Customize how frequently you're introduced to new words
 - Blacklist or whitelist websites
 
+## Diathesis Easy (Ancient Greek)
+
+This fork can immerse English pages using only Ancient Greek lemmas marked Easy in [Diathesis](https://github.com/hijoelkim/diathesis). Import `english;greek` lines or JSON `{ "en", "grc" }` pairs. Automatic Google Translate adds stay off for that pair. See [IMMERSION.md](IMMERSION.md). Sample lists are in [examples/](examples/).
+
 ## Coming soon:
 
 - Export and import dictionaries

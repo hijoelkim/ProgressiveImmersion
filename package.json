@@ -23,6 +23,7 @@
 		"serve-ext-v2": "web-ext run --devtools",
 		"build-v2": "npx webpack --mode=production --env manifest=v2 && npx web-ext build --filename progressiveimmersion_v2.zip",
 		"lint": "eslint \"./src/**/*{.js,.cjs,.mjs}\"",
+		"test": "node --experimental-default-type=module --test src/diathesis-easy.test.js",
 		"fix-lint": "eslint \"./src/**/*{.js,.cjs,.mjs}\" --fix"
 	},
 	"author": "Aidan Welch",

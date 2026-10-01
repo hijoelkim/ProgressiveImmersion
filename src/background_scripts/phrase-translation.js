@@ -1,4 +1,4 @@
-import { browser } from '../config';
+import { MANUAL_ONLY_TARGETS, browser } from '../config';
 import translate from 'google-translate-api-x';
 
 const MAX_PHRASE_TRANSLATIONS_PER_DAY = 50;
@@ -8,6 +8,10 @@ const phraseTranslationsPromise = browser.storage.local.get( 'phraseTranslations
 let translationQueue = Promise.resolve( 0 );
 
 async function translatePhrase ( phrase, origin, target ) {
+	if ( MANUAL_ONLY_TARGETS.includes( target ) ) {
+		return undefined;
+	}
+
 	const phraseTranslations = await phraseTranslationsPromise;
 
 	const phraseLower = phrase.toLowerCase().replace( /\s+/gu, ' ' );
